@@ -11,6 +11,7 @@ $qry = $conn->query("SELECT * FROM project_list where id = ".$id)->fetch_array()
 foreach($qry as $k => $v){
 	$$k = $v;
 }
+
 $tprog = $conn->query("SELECT * FROM task_list where project_id = {$id}")->num_rows;
 $cprog = $conn->query("SELECT * FROM task_list where project_id = {$id} and status = 5")->num_rows;
 $prog = $tprog > 0 ? ($cprog/$tprog) * 100 : 0;
@@ -157,7 +158,7 @@ if($_SESSION['login_type'] == 2){
 							// $deanid = $_SESSION['login_id'];
 							// $chairid = $_SESSION['login_id'];
 							// $memberid = $_SESSION['login_id'];
-							if($_SESSION['login_type'] == 3 || $_SESSION['login_type'] == 1){ ?>
+							if($_SESSION['login_type'] != 3 ){ ?>
 								<button class="btn btn-primary bg-primary btn-sm" type="button" id="new_task"><i class="fa fa-plus"></i> New Task</button>
 								<?php 
 							}
@@ -200,15 +201,26 @@ if($_SESSION['login_type'] == 2){
 											// $data_img = $conn->query("SELECT avatar,concat(firstname,' ',lastname) as uname FROM users u INNER JOIN project_list p ON u.id = p.user_ids INNER JOIN task_list t ON t.project_id = p.id WHERE t.id in ($proj_ids) order by t.task asc");
 											// start_time
 										// $qry_start_time = "";
+											$user_ids = $row['task_owner'];
+										
+										// fetch assignee in array
+										$qryassignee = $conn->query("SELECT avatar,concat(firstname,' ',lastname) as uname FROM users where id in ($user_ids) order by concat(firstname,' ',lastname) asc");
+
 									?>
 										<tr>
 											<td class="text-center"><?php echo $i++ ?></td>
 											<td class="" style="min-width:250px"><b><?php echo ucwords($row['task']) ?></b></td>
-											<td class="">																						
-												<ul>
+											<td class="">	
+												<ul class="users-list align-left clearfix p-0">
+													<?php if($assignee = $qryassignee->fetch_assoc()): ?>											
 													<li>
-														<span><b><?php echo ucwords($row['task_owner']) ?></b></span>
+														<img src="assets/uploads/<?php echo $assignee['avatar'] ?>" title="<?= $assignee['uname'] ?>" alt="User Image" class="img-circle elevation-2 img-responsive p-0 m-0" style="width:80px;height:100%;cursor:pointer">
+														
 													</li>
+													<li class="" style="width:400px">
+													<span class=""><?= $assignee['uname'] ?></span>
+													</li>
+													<?php endif ?>
 												</ul>
 											</td>
 											<td>

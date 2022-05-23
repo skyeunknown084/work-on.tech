@@ -107,8 +107,8 @@ if(file_exists($zip_file)){
                 <a class="btn btn-info ml-auto" href="<?php echo $zip_file ?>" data-download=""><i class="fa fa-download"></i> Download All Files</a>
             </div>
             <hr/>
-            <div class="conntainer">
-                <table class="table table-hover table-condensed" id="list-files">
+            <div class="container">
+                <table class="table table-hover table-condensed" id="project-files">
                     <thead>
                         <th width="5%">#</th>
                         <th>File Name</th>
@@ -187,69 +187,7 @@ if(file_exists($zip_file)){
                         } 
                         ?>
                     </tbody>
-                </table>
-                <ul class="row hdie" style="">
-                    <?php
-                    
-                        // Get images from the database
-                        $query = $conn->query("SELECT * FROM user_productivity ORDER BY date_uploaded DESC");
-                        
-                        if($query->num_rows > 0){
-                            
-                            while($row = $query->fetch_assoc()){
-                                $imageURL = 'assets/uploads/files/'.$row["file_name"];
-                                $exFormat = $row['file_type'];
-                                $file_name = $row['file_name'];
-                        ?>
-                    <li class="col-lg-2 col-md-3 col-sm-6 m-2 align-center hide">
-                        <?php if($exFormat == 'pdf'){ ?>
-                            <a target="_blank" href="<?php echo $imageURL; ?>" title="<?= $file_name ?>" class="img-fluid img-thumbnail m-2 align-center text-danger">
-                                <i class="fas fa-file-pdf fa-3x"></i>
-                                <br/><small><?= $file_name ?></small>
-                                <!-- <br/><span><a class="fa fa-trash"></a></span> -->
-                            </a>
-                            <?php 
-                            }
-                            elseif($exFormat == 'docx'){ ?>
-                            <a  target="_blank" href="<?php echo $imageURL; ?>" title="<?= $file_name ?>" class="img-fluid img-thumbnail m-2 align-center text-primary">
-                                <i class="fas fa-file-word fa-3x"></i>
-                                <br/><small><?= $file_name ?></small>
-                                <!-- <br/><span><a class="fa fa-trash"></a></span> -->
-                            </a>
-                        <?php 
-                            }
-                            elseif($exFormat == 'xlsx'){ ?>
-                            <a  target="_blank" href="<?php echo $imageURL; ?>" title="<?= $file_name ?>" class=" text-success">
-                                <i class="fas fa-file-excel fa-3x"></i>
-                                <br/><small><?= $file_name ?></small>
-                                <!-- <br/><span><a class="fa fa-trash"></a></span> -->
-                            </a>
-                            <?php 
-                            }
-                            elseif($exFormat == 'pptx'){ ?>
-                            <a  target="_blank" href="<?php echo $imageURL; ?>" title="<?= $file_name ?>" class="img-fluid img-thumbnail m-2 align-center text-warning">
-                                <i class="fas fa-file-powerpoint fa-3x"></i>
-                                <br/><small><?= $file_name ?></small>
-                                <!-- <br/><span><a class="fa fa-trash"></a></span> -->
-                            </a>
-                        <?php 
-                            }
-                            else{ ?>
-                            <img src="<?php echo $imageURL; ?>" alt="" title="<?= $file_name ?>" class="img-fluid img-thumbnail" style="height:100px" />
-                        <?php } ?>        
-                        <a class="btn btn-default delete_file" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><i class="fa fa-trash text-danger"></i></a>
-                        
-                    </li>
-                    <?php 
-                            }
-                        }else{ ?>
-                        <div class="py-5 my-5 mx-auto">
-                            <p class="py-5 my-5 mx-auto text-center">No file(s) found...</p>
-                        </div>
-                            
-                        <?php } ?>
-                </ul>
-                
+                </table>                
             </div>
         </div>
     </div>
@@ -259,12 +197,11 @@ if(file_exists($zip_file)){
 
 <script>
 $(document).ready(function(){
-    // $('#data-list').dataTable();	
+    $('#project-files').dataTable();
     $('.delete_file').click(function(){
     _conf("Are you sure to delete this file?","delete_file",[$(this).attr('data-id')])
     })
     
-    $('#list-files').dataTable()
 })
 // Upload File Form
     $('#manage_upload_file').submit(function(e){

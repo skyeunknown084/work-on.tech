@@ -24,7 +24,7 @@ if(isset($_GET['id'])){
 				$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 3 order by concat(firstname,' ',lastname) asc ");
 				while($row= $employees->fetch_assoc()):
 				?>
-				<option value="<?php echo $row['name'] ?>" <?php echo isset($task_owner) && in_array($row['name'],explode(',',$task_owner)) ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
+				<option value="<?php echo $row['id'] ?>" <?php echo isset($task_owner) && in_array($row['id'],explode(',',$task_owner)) ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
 				<?php endwhile; ?>
 			</select>
 			

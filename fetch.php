@@ -16,7 +16,7 @@ $update_query = "UPDATE task_list SET active=1 WHERE active=0";
 mysqli_query($conn, $update_query);
 }
 
- $query = "SELECT *,concat(firstname,' ',lastname) as uname,u.id as u_id FROM users u INNER JOIN task_list t ON concat(firstname,' ',lastname) = t.task_owner WHERE t.active = 1";
+ $query = "SELECT *,concat(firstname,' ',lastname) as uname,u.id as u_id FROM users u INNER JOIN task_list t ON u.id = t.task_owner WHERE t.active = 1";
  $result = mysqli_query($conn, $query);
  $output = '';
  
