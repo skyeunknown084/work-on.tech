@@ -20328,9 +20328,9 @@ html.maximized-card {
 
 .users-list > li {
   float: left;
-  padding: 10px;
-  text-align: center;
-  width: 15%;
+  /* padding: 10px; */
+  text-align: left;
+  width: 50px;
 }
 
 .users-list > li img {

@@ -5,9 +5,9 @@ $stat = array("Not Started","Started","In Progress","In Review","Completed");
 // Decrypt ID Param
 $decrypt_1 = base64_decode($_GET['id']);
 // Get ID on url
-$p_id = ($decrypt_1 / 9234123120);
+$id = ($decrypt_1 / 9234123120);
 
-$qry = $conn->query("SELECT * FROM project_list where id = ".$p_id)->fetch_array();
+$qry = $conn->query("SELECT * FROM project_list where id = ".$id)->fetch_array();
 foreach($qry as $k => $v){
 	$$k = $v;
 }
@@ -170,103 +170,97 @@ if($_SESSION['login_type'] == 2){
 				<div class="card-body">
 					<div class="tab-content px-0 mx-0" id="pills-tabContent">
 						<div class="tab-panel col-lg-12" id="listtask" role="tabpanel" aria-labelledby="pills-list-tab">
-							<div class="col-lg-12 table-responsive">
-								<table class="table table-hover table-condensed x-scroll" id="datalist">
-									<colgroup>
-										<col width="5%">
-										<col width="40%">
-										<col width="30%">
-										<col width="15%">
-										<col width="10%">
-									</colgroup>
-									<thead>
-										<th width="5%">#</th>
-										<th width="40%">Task</th>
-										<th width="30%">Assignee</th>
-										<th width="15%">Status</th>
-										<th width="10%">Action</th>
-									</thead>
-									<tbody>
-										<?php 
-										$i = 1;
-										$tasks = $conn->query("SELECT * FROM task_list where project_id = {$id} order by task asc");
-										while($row=$tasks->fetch_assoc()):
-											$trans = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
-											unset($trans["\""], $trans["<"], $trans[">"], $trans["<h2"]);
-											$desc = strtr(html_entity_decode($row['description']),$trans);
-											$desc=str_replace(array("<li>","</li>"), array("",", "), $desc);											
-												// fetch members in array
-												// $proj_ids = $row['project_id']; 
-												// $_SESSION['pid'] = $row['project_id'];											
-												// $data_img = $conn->query("SELECT avatar,concat(firstname,' ',lastname) as uname FROM users u INNER JOIN project_list p ON u.id = p.user_ids INNER JOIN task_list t ON t.project_id = p.id WHERE t.id in ($proj_ids) order by t.task asc");
-												// start_time
-											// $qry_start_time = "";
-												$user_ids = $row['task_owner'];
-											
-											// fetch assignee in array
-											$qryassignee = $conn->query("SELECT avatar,concat(firstname,' ',lastname) as uname FROM users where id in ($user_ids) order by concat(firstname,' ',lastname) asc");
-											
-											// encrypt id params
-											$data = $row['id'];
-											// convert to string and make it longer
-											$encode_data = (strval($data)*'9234123120');
-											// // encrypt data with base64 
-											$encoded_id = base64_encode($encode_data);
-										?>
-											<tr>
-												<td class="text-center"><?php echo $i++ ?></td>
-												<td class="" style="min-width:250px"><b><?php echo ucwords($row['task']) ?></b></td>
-												<td class="">	
-													<ul class="clearfix p-0">
-														<?php if($assignee = $qryassignee->fetch_assoc()): ?>											
-														<li>
-															<img src="assets/uploads/<?php echo $assignee['avatar'] ?>" title="<?= $assignee['uname'] ?>" alt="User Image" class="img-circle elevation-2 img-responsive p-0 m-0" style="width:40px;height:40px;cursor:pointer">
-															
-														</li>
-														<li class="">
-														<span class=""><?= $assignee['uname'] ?></span>
-														</li>
-														<?php endif ?>
-													</ul>
-												</td>
-												<td>
-													<?php 
-													if($row['status'] == 0){
-														echo "<span class='badge badge-secondary'>Not Started</span>";
-													}elseif($row['status'] == 1){
-													echo "<span class='badge badge-primary'>Started</span>";
-													}elseif($row['status'] == 2){
-													echo "<span class='badge badge-info'>In Progress</span>";
-													}elseif($row['status'] == 3){
-													echo "<span class='badge badge-warning'>In Review</span>";
-													}elseif($row['status'] == 4){
-													echo "<span class='badge badge-success'>Completed</span>";
-													}
-													// elseif($row['status'] == 6){
-													// 	echo "<span class='badge badge-success'>Completed</span>";
-													// }
-													?>
-												</td>
-												<td class="text-center">
-													<button type="button" class="btn btn-default btn-sm btn-round border-info wave-effect text-info dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-													Action
-													</button>
-													<div class="dropdown-menu" style="">
-													<a class="dropdown-item view_task" href="javascript:void(0)" data-id="<?php echo $encoded_id ?>" data-task="<?php echo $row['task'] ?>"><i class="fa fa-eye mx-1"></i> View</a>
-													<div class="dropdown-divider"></div>
-													<?php if($_SESSION['login_type'] != 3): ?>
-													<a class="dropdown-item edit_task" href="javascript:void(0)" data-id="<?php echo $encoded_id ?>" data-task="<?php echo $row['task'] ?>"><i class="fa fa-pencil-alt mx-1"></i> Edit</a>
-													<div class="dropdown-divider"></div>
-													<a class="dropdown-item delete_task" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><i class="fa fa-trash mx-1"></i> Delete</a>
-													<?php endif; ?>
-													</div>
-												</td>
-											</tr>
-										<?php 
-										endwhile;
-										?>
-									</tbody>
-								</table>
+							<div class="col-lg-12">
+							<table class="table table-hover table-condensed x-scroll" id="datalist">
+								<colgroup>
+									<col width="5%">
+									<col width="50%">
+									<col width="15%">
+									<col width="15%">
+									<col width="15%">
+								</colgroup>
+								<thead>
+									<th>#</th>
+									<th>Task</th>
+									<th>Assignee</th>
+									<th>Status</th>
+									<th>Action</th>
+								</thead>
+								<tbody>
+									<?php 
+									$i = 1;
+									$tasks = $conn->query("SELECT * FROM task_list where project_id = {$id} order by task asc");
+									while($row=$tasks->fetch_assoc()):
+										$trans = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
+										unset($trans["\""], $trans["<"], $trans[">"], $trans["<h2"]);
+										$desc = strtr(html_entity_decode($row['description']),$trans);
+										$desc=str_replace(array("<li>","</li>"), array("",", "), $desc);											
+											// fetch members in array
+											// $proj_ids = $row['project_id']; 
+											$_SESSION['pid'] = $row['project_id'];											
+											// $data_img = $conn->query("SELECT avatar,concat(firstname,' ',lastname) as uname FROM users u INNER JOIN project_list p ON u.id = p.user_ids INNER JOIN task_list t ON t.project_id = p.id WHERE t.id in ($proj_ids) order by t.task asc");
+											// start_time
+										// $qry_start_time = "";
+											$user_ids = $row['task_owner'];
+										
+										// fetch assignee in array
+										$qryassignee = $conn->query("SELECT avatar,concat(firstname,' ',lastname) as uname FROM users where id in ($user_ids) order by concat(firstname,' ',lastname) asc");
+
+									?>
+										<tr>
+											<td class="text-center"><?php echo $i++ ?></td>
+											<td class="" style="min-width:250px"><b><?php echo ucwords($row['task']) ?></b></td>
+											<td class="">	
+												<ul class="users-list align-left clearfix p-0">
+													<?php if($assignee = $qryassignee->fetch_assoc()): ?>											
+													<li>
+														<img src="assets/uploads/<?php echo $assignee['avatar'] ?>" title="<?= $assignee['uname'] ?>" alt="User Image" class="img-circle elevation-2 img-responsive p-0 m-0" style="width:80px;height:100%;cursor:pointer">
+														
+													</li>
+													<li class="" style="width:400px">
+													<span class=""><?= $assignee['uname'] ?></span>
+													</li>
+													<?php endif ?>
+												</ul>
+											</td>
+											<td>
+												<?php 
+												if($row['status'] == 1){
+													echo "<span class='badge badge-secondary'>Not Started</span>";
+												}elseif($row['status'] == 2){
+												echo "<span class='badge badge-primary'>Started</span>";
+												}elseif($row['status'] == 3){
+												echo "<span class='badge badge-info'>In Progress</span>";
+												}elseif($row['status'] == 4){
+												echo "<span class='badge badge-warning'>In Review</span>";
+												}elseif($row['status'] == 5){
+												echo "<span class='badge badge-success'>Completed</span>";
+												}
+												// elseif($row['status'] == 6){
+												// 	echo "<span class='badge badge-success'>Completed</span>";
+												// }
+												?>
+											</td>
+											<td class="text-center">
+												<button type="button" class="btn btn-default btn-sm btn-round border-info wave-effect text-info dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+												Action
+												</button>
+												<div class="dropdown-menu" style="">
+												<a class="dropdown-item view_task" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-task="<?php echo $row['task'] ?>"><i class="fa fa-eye mx-1"></i> View</a>
+												<div class="dropdown-divider"></div>
+												<?php if($_SESSION['login_type'] != 3): ?>
+												<a class="dropdown-item edit_task" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-task="<?php echo $row['task'] ?>"><i class="fa fa-pencil-alt mx-1"></i> Edit</a>
+												<div class="dropdown-divider"></div>
+												<a class="dropdown-item delete_task" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><i class="fa fa-trash mx-1"></i> Delete</a>
+												<?php endif; ?>
+												</div>
+											</td>
+										</tr>
+									<?php 
+									endwhile;
+									?>
+								</tbody>
+							</table>
 							</div>
 						</div>
 						<div class="tab-pane hide" id="boardtask" role="tabpanel" aria-labelledby="pills-list-tab">
@@ -286,7 +280,7 @@ if($_SESSION['login_type'] == 2){
 						<button class="btn btn-primary bg-primary btn-sm" type="button" id="new_productivity"><i class="fa fa-plus"></i> Add Attachment File</button>
 					</div>
 				</div>
-				<div class="card-body table-responsive">
+				<div class="card-body">
 					<table class="table table-hover table-condensed x-scroll" id="datalistfile">
 						<colgroup>
 							<col width="5%">
@@ -305,13 +299,7 @@ if($_SESSION['login_type'] == 2){
 						<tbody>
 							<?php 
 							$progress = $conn->query("SELECT p.*,concat(u.firstname,' ',u.lastname) as uname,u.avatar,t.task FROM user_productivity p inner join users u on u.id = p.user_id inner join task_list t on t.id = p.task_id where p.project_id = $id order by unix_timestamp(p.date_created) desc ");
-							while($row = $progress->fetch_assoc()){
-								// encrypt id params
-								$data = $row['id'];
-								// convert to string and make it longer
-								$encode_data = (strval($data)*'9234123120');
-								// // encrypt data with base64 
-								$encoded_id = base64_encode($encode_data);
+							while($row = $progress->fetch_assoc()):
 							?>
 								<tr>
 									<td class="text-center"><?php echo $i++ ?></td>
@@ -322,10 +310,10 @@ if($_SESSION['login_type'] == 2){
 										Action
 										</button>
 										<div class="dropdown-menu" style="">
-										<a class="dropdown-item view_progress" href="javascript:void(0)" data-id="<?php echo $encoded_id ?>" data-task="<?php echo $row['task'] ?>"><i class="fa fa-comments mx-1"></i> Comments</a>
+										<a class="dropdown-item view_progress" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-task="<?php echo $row['task'] ?>"><i class="fa fa-comments mx-1"></i> Comments</a>
 										<div class="dropdown-divider"></div>
 										<?php if($_SESSION['login_type'] != 3): ?>
-										<a class="dropdown-item manage_progress" href="javascript:void(0)" data-id="<?php echo $encoded_id ?>" data-task="<?php echo $row['task'] ?>"><i class="fa fa-pencil-alt mx-1"></i> Edit</a>
+										<a class="dropdown-item manage_progress" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-task="<?php echo $row['task'] ?>"><i class="fa fa-pencil-alt mx-1"></i> Edit</a>
 										<div class="dropdown-divider"></div>
 										<a class="dropdown-item delete_progress" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><i class="fa fa-trash mx-1"></i> Delete</a>
 										<?php endif; ?>
@@ -333,7 +321,7 @@ if($_SESSION['login_type'] == 2){
 									</td>
 								</tr>
 							<?php 
-								}
+							endwhile;
 							?>
 						</tbody>
 					</table>
@@ -425,11 +413,14 @@ if($_SESSION['login_type'] == 2){
 			url:'ajax.php?action=delete_task',
 			method:'POST',
 			data:{id:$id},
-			success:function(){
-				alert_toast("Data successfully deleted",'success')
-				setTimeout(function(){
-					location.reload()
-				},1500)
+			success:function(resp){
+				if(resp==1){
+					alert_toast("Data successfully deleted",'success')
+					setTimeout(function(){
+						location.reload()
+					},1500)
+
+				}
 			}
 		})
 	}

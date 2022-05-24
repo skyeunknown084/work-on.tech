@@ -1,7 +1,12 @@
 <?php 
 include 'db_connect.php';
 if(isset($_GET['id'])){
-	$qry2 = $conn->query("SELECT * FROM task_list where id = ".$_GET['id'])->fetch_array();
+	// Decrypt ID Param
+	$decrypt_1 = base64_decode($_GET['id']);
+	// Get ID on url
+	$t_id = ($decrypt_1 / 9234123120);
+
+	$qry2 = $conn->query("SELECT * FROM task_list where id = ".$t_id)->fetch_array();
 	foreach($qry2 as $k => $v){
 		$$k = $v;
 	}

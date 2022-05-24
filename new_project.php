@@ -1,31 +1,5 @@
 <?php if(!isset($conn)){ include 'db_connect.php'; } ?>
-<?php if (isset($_POST['save'])) {
-  $target_dir = "Uploaded_Files/";
-  $target_file = $target_dir . date("dmYhis") . "_". basename($_FILES["file"]["name"]);
-  $uploadOk = 1;
-  $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
- 
-  if($imageFileType != "jpg" || $imageFileType != "png" || $imageFileType != "jpeg" || $imageFileType != "gif" ) {
-    if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
-      $files = date("dmYhis") . basename($_FILES["file"]["name"]);
-    }else{
-      echo "Error Uploading File";
-      exit;
-    }
-  }else{
-    echo "File Not Supported";
-    exit;
-  }
-  $filename = $_POST['filename'];
-  $location = "Uploaded_Files/" . $files;
-  $sqli = "INSERT INTO `tblfiles` (`FileName`, `Location`) VALUES ('{$filename}','{$location}')";
-  $result = mysqli_query($conn,$sqli);
-  if ($result) {
-    echo "File has been uploaded";
-  };
 
-}
-?>
 <div class="col-lg-12">
 	<div class="card card-outline card-success">
 		<div class="card-body">
@@ -112,7 +86,7 @@
     	<div class="card-footer border-top border-info">
     		<div class="d-flex w-100 justify-content-center align-items-center">
     			<button class="btn btn-round bg-primary mx-2" form="manage-project">Save</button>
-    			<button class="btn btn-round bg-info mx-2" type="button" onclick="location.href='index.php?page=project_list'">Cancel</button>
+    			<button class="btn btn-round bg-info mx-2" type="button" onclick="location.href='index.php?page=project-list'">Cancel</button>
     		</div>
     	</div>
 	</div>

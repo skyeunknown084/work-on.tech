@@ -1,7 +1,12 @@
 <?php 
 include 'db_connect.php';
 if(isset($_GET['id'])){
-	$qryprogress = $conn->query("SELECT * FROM user_productivity where id = ".$_GET['id'])->fetch_array();
+	// Decrypt ID Param
+	$decrypt_1 = base64_decode($_GET['id']);
+	// Get ID on url
+	$up_id = ($decrypt_1 / 9234123120);
+
+	$qryprogress = $conn->query("SELECT * FROM user_productivity where id = ".$up_id)->fetch_array();
 	foreach($qryprogress as $k => $v){
 		$$k = $v;
 	}
@@ -45,7 +50,7 @@ if(isset($_GET['id'])){
 					<div class="form-group">
 						<label for="" class="control-label">Add Task File</label>
 						<div class="custom-file">
-						<input type="file" class="" id="custom_file" name="taskfile" onchange="displayFile(this,$(this))" required>
+						<input type="file" class="" id="custom_file" name="taskfile" <?php echo isset($file_name) ? $file_name : '' ?> onchange="displayFile(this,$(this))" required>
 						</div>
 					</div>
 					<div class="form-group d-flex file-display">
@@ -113,7 +118,7 @@ if(isset($_GET['id'])){
 				</div>
 				<div class="col-md-7">
 					<div class="form-group pb-4 mb-4">
-						<label for="description">Comment/Progress Description</label>
+						<label for="description">Progress Description</label>
 						<textarea name="description" id="task_progress_desc" cols="30" rows="30" class="summernote form-control" required="">
 							<?php echo isset($description) ? $description : '' ?>
 						</textarea>
@@ -141,26 +146,25 @@ if(isset($_GET['id'])){
 			reader.readAsDataURL(input.files[0]);
 		}
 	}
-	$(document).ready(function(){
-		
-	$('.summernote').summernote({
-        height: 200,
-        toolbar: [
-            [ 'style', [ 'style' ] ],
-            [ 'font', [ 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear'] ],
-            [ 'fontname', [ 'fontname' ] ],
-            [ 'fontsize', [ 'fontsize' ] ],
-            [ 'color', [ 'color' ] ],
-            [ 'para', [ 'ol', 'ul', 'paragraph', 'height' ] ],
-            [ 'table', [ 'table' ] ],
-            [ 'view', [ 'undo', 'redo', 'fullscreen', 'codeview', 'help' ] ]
-        ]
-    })
-     $('.select2').select2({
-	    placeholder:"Please select here",
-	    width: "100%"
-	  });
-     })
+	$(document).ready(function(){		
+		$('.summernote').summernote({
+			height: 200,
+			toolbar: [
+				[ 'style', [ 'style' ] ],
+				[ 'font', [ 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear'] ],
+				[ 'fontname', [ 'fontname' ] ],
+				[ 'fontsize', [ 'fontsize' ] ],
+				[ 'color', [ 'color' ] ],
+				[ 'para', [ 'ol', 'ul', 'paragraph', 'height' ] ],
+				[ 'table', [ 'table' ] ],
+				[ 'view', [ 'undo', 'redo', 'fullscreen', 'codeview', 'help' ] ]
+			]
+		})
+		$('.select2').select2({
+			placeholder:"Please select here",
+			width: "100%"
+		});
+	})
     $('#manage-progress').submit(function(e){
     	e.preventDefault()
     	start_load()

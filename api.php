@@ -321,12 +321,12 @@ Class Action {
 		// $date_uploaded = now();
 		foreach($_POST as $k => $v){
 			if(!in_array($k, array('id')) && !is_numeric($k)){
-				if($k == 'comment')
+				if($k == 'description')
 					$v = htmlentities(str_replace("'","&#x2019;",$v));
 				if(empty($v)){
-					$comment = "$v";
+					$description = "$v";
 				}else{
-					$comment = "$v";
+					$description = "$v";
 				}
 			}
 		}
@@ -356,7 +356,7 @@ Class Action {
 		if(empty($id)){
 			$user_id = "{$_SESSION['login_id']}";
 			
-			$allowTypes = array('jpg','png','jpeg','gif','pdf','docx','xlsx','pptx');
+			$allowTypes = array('jpg','png','jpeg','gif','pdf','docx','xlsx','pptx','zip','rar');
 			if(in_array($fileType, $allowTypes)){
 				// $data .= ", file_type={$fileType}";
 

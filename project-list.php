@@ -20,7 +20,7 @@ elseif($_SESSION['login_id'] == 3){
 	<div class="card card-outline card-success">
 		<div class="card-body">
 			<div class="table-responsive xpand xpand-table x-scroll">
-				<table class="table table-hover table-condensed " id="list">
+				<table class="table table-hover table-condensed " id="project-list-table">
 					<thead>
 						<tr>
 							<th class="text-center">#</th>
@@ -29,7 +29,7 @@ elseif($_SESSION['login_id'] == 3){
 							<th>Start Date</th>
 							<th>Due Date</th>
 							<th>Status</th>
-							<th>Action</th>
+							<th class="text-center">Action</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -72,22 +72,22 @@ elseif($_SESSION['login_id'] == 3){
 						?>
 						<tr>
 							<td class="text-center"><?= $i++ ?></td>
-							<td class="text-center">
+							<td class="text-left">
 								<?= ucwords($row['name']) ?>
 							</td>
-							<td class="text-center">
-								<ul class="users-list align-left clearfix p-0">
+							<td class="text-left">
+								<ul class="users-list text-left ms-auto align-left d-flex clearfix p-0">
 									<?php while($members = $qrymembers->fetch_assoc()): ?>											
 									<li>
-										<img src="assets/uploads/<?php echo $members['avatar'] ?>" title="<?= $members['uname'] ?>" alt="User Image" class="img-circle elevation-2 img-responsive p-0 m-0" style="width:100px;height:100%;cursor:pointer">
+										<img src="assets/uploads/<?php echo $members['avatar'] ?>" title="<?= $members['uname'] ?>" alt="User Image" class="img-circle elevation-2 img-responsive p-0 m-0" style="width:40px;height:40px;cursor:pointer">
 										<span class="users-list-date"></span>
 									</li>
 									<?php endwhile ?>
 								</ul>
 							</td>
-							<td class="text-center"><?= date("M d, Y",strtotime($row['start_date'])) ?></td>
-							<td class="text-center"><?= date("M d, Y",strtotime($row['end_date'])) ?></td>
-							<td class="text-center">
+							<td class="text-left"><?= date("M d, Y",strtotime($row['start_date'])) ?></td>
+							<td class="text-left"><?= date("M d, Y",strtotime($row['end_date'])) ?></td>
+							<td class="text-left">
 								<?php
 								if($row['status'] == 0){
 									echo "<span class='badge badge-secondary'>Not Started</span>";
@@ -144,5 +144,28 @@ elseif($_SESSION['login_id'] == 3){
 	}
 </style>
 <script>
-	
+	$(document).ready(function(){
+		$('#project-list-table').dataTable();	
+        $('.delete_project').click(function(){
+        _conf("Are you sure to delete this project?","delete_project",[$(this).attr('data-id')])
+        })
+
+	})
+	function delete_project($id){
+		start_load()
+		$.ajax({
+			url:'ajax.php?action=delete_project',
+			method:'POST',
+			data:{id:$id},
+			success:function(resp){
+				if(resp==1){
+					alert_toast("Data successfully deleted",'success')
+					setTimeout(function(){
+						location.reload()
+					},1500)
+
+				}
+			}
+		})
+	}
 </script>
