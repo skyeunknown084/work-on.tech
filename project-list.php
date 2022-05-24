@@ -46,21 +46,36 @@ elseif($_SESSION['login_id'] == 3){
 							// fetch members in array
 							$qrymembers = $conn->query("SELECT avatar,concat(firstname,' ',lastname) as uname FROM users where id in ($user_ids) order by concat(firstname,' ',lastname) asc");
 
-							// progress calc
+							// Calc Statis / Progress
+							// if date_created is over to the start_date of table `project_list` the status should be 'Started'
+							$started_qry = $conn->query("SELECT * FROM project_list where id = {$row['id']} AND start_date > now()")->num_rows;
+							// if a task in a specific project is started, project status will be 'In-Progress'
+							$inprogress_qry = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} AND status = 2")->num_rows;
+							// if all task in a specific project is completed, project status will be 'In-Review'
+							$inreview_qry = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} AND status = 4")->num_rows;
+							// if all task in and task files for a specific project is accomplished, project status will be 'Completed'
+							$completed_qry = $conn->query("SELECT * FROM user_productivity where project_id = {$row['id']} AND cast(date_uploaded AS DATE) != {$row['end_date']}")->num_rows;
+
 							$tprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']}")->num_rows;
-							$cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} and status = 5")->num_rows;
+							$cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} and status = 1")->num_rows;
 							$prog = $tprog > 0 ? ($cprog/$tprog) * 100 : 0;
 							$prog = $prog > 0 ?  number_format($prog,5) : $prog;
 							$prod = $conn->query("SELECT * FROM user_productivity where project_id = {$row['id']}")->num_rows;
 
-							// status calc
+							// status calc display on project-list
 							if($row['status'] == 0 && strtotime(date('Y-m-d')) >= strtotime($row['start_date'])):
-							if($prod  > 0  || $cprog > 0)
-							$row['status'] = 1;
-							else
-							$row['status'] = 0;
-							elseif($row['status'] == 0 && strtotime(date('Y-m-d')) > strtotime($row['end_date'])):
-							$row['status'] = 4;
+								if($started_qry  > 0 && $prod  > 0)
+								$row['status'] = 1;
+								// elseif($inprogress_qry  > 0)
+								// $row['status'] = 2;
+								// elseif($inreview_qry  > 0)
+								// $row['status'] = 3;
+								// elseif($completed_qry  > 0)
+								// $row['status'] = 4;
+								else
+								$row['status'] = 0;
+								elseif($row['status'] == 0 && strtotime(date('Y-m-d')) > strtotime($row['end_date'])):
+								$row['status'] = 4;
 							endif;
 							
 							// encrypt id params
