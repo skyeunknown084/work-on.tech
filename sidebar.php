@@ -1,3 +1,10 @@
+<?php
+error_reporting(0);
+  // $chair_qry = $conn->query("SELECT * FROM project_list where chair_id = ".$_SESSION['login_id'])->fetch_array();
+	// foreach($qryprogress as $k => $v){
+	// 	$chair[$k] = $v;
+	// }
+?>
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <div class="dropdown brand-logo mb-5">
       <a href="./" class="nav-item brand-link">
@@ -33,7 +40,7 @@
             </a>
           </li>  
           
-          <li class="nav-item">
+          <li class="nav-item menu-is-opening menu-open">
             <a href="#" class="nav-link nav-edit_group">
               <i class="nav-icon fas fa-layer-group"></i>
               <p>
@@ -42,7 +49,7 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <?php if($_SESSION['login_type'] == 1): ?>
+              <?php if($_SESSION['login_type'] == 1 || $_SESSION['chair']['chair_id'] == $_SESSION['login_id']): ?>
               <li class="nav-item">
                 <a href="./index.php?page=new_project" class="nav-link nav-new_project tree-item">
                   <i class="fas fa-angle-right nav-icon"></i>
@@ -51,7 +58,7 @@
               </li>
               <?php endif; ?>
               <li class="nav-item">
-                <a href="./index.php?page=project-list" class="nav-link nav-project_list tree-item">
+                <a href="./index.php?page=project-list" class="nav-link nav-project-list tree-item">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Project List</p>
                 </a>
@@ -59,12 +66,12 @@
             </ul>
           </li>
           
-          <?php if($_SESSION['login_type'] != 3): ?>
-           <li class="nav-item">
-                <a href="./index.php?page=reports" class="nav-link nav-reports">
-                  <i class="fas fa-th-list nav-icon"></i>
-                  <p>Reports</p>
-                </a>
+          <?php if($_SESSION['login_type'] == 1 || $_SESSION['chair']['chair_id'] == $_SESSION['login_id']) : ?>
+          <li class="nav-item">
+            <a href="./index.php?page=reports" class="nav-link nav-reports">
+              <i class="fas fa-th-list nav-icon"></i>
+              <p>Reports</p>
+            </a>
           </li>
           <?php endif; ?>
           <?php if($_SESSION['login_type'] == 1): ?>

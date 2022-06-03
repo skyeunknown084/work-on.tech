@@ -112,6 +112,47 @@ if($action == 'update_progress'){
 	if($save)
 		echo $save;
 }
+if($action == 'delete_task_notif'){
+	$save = $crud->delete_task_notif();
+	if($save)
+		echo $save;
+}
+if($action == 'update_task_notif_reject'){
+	$save = $crud->update_task_notif_reject();
+	if($save)
+		echo $save;
+}
+if($action == 'update_task_notif_accept'){
+	$save = $crud->update_task_notif_accept();
+	if($save)
+		echo $save;
+}
+
+if($action == 'update_task_notif_admin_ok'){
+	$save = $crud->update_task_notif_admin_ok();
+	if($save)
+		echo $save;
+}
+if($action == 'update_task_submitted_notif_admin_ok'){
+	$save = $crud->update_task_submitted_notif_admin_ok();
+	if($save)
+		echo $save;
+}
+if($action == 'update_task_notif_chair_ok'){
+	$save = $crud->update_task_notif_chair_ok();
+	if($save)
+		echo $save;
+}
+if($action == 'update_task_submitted_notif_chair_ok'){
+	$save = $crud->update_task_submitted_notif_chair_ok();
+	if($save)
+		echo $save;
+}
+if($action == 'update_select_chair'){
+	$save = $crud->update_select_chair();
+	if($save)
+		echo $save;
+}
 
 ob_end_flush();
 ?>

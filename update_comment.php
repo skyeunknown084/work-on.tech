@@ -1,7 +1,11 @@
 <?php
 // fetch table
 if(isset($_GET['id'])){
-	$qry = $conn->query("SELECT * FROM project_list where id = ".$_GET['id'])->fetch_array();
+    // Decrypt ID Param
+	$decrypt_1 = base64_decode($_GET['id']);
+	// Get ID on url
+	$p_id = ($decrypt_1 / 9234123120);
+	$qry = $conn->query("SELECT * FROM project_list where id = ".$p_id)->fetch_array();
 	foreach($qry as $k => $v){
 		$$k = $v;
 	}

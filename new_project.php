@@ -31,17 +31,16 @@
 						</div>
 					</div>
 				</div>
-				<div class="row">
-					
-					<input type="text" class="hide" name="proj_status" value="1">
+				<div class="row">					
+					<input type="text" class="hide" name="proj_status" value="<?php echo isset($proj_status) ? $proj_status : '' ?>">
 					<?php if($_SESSION['login_type'] == 3 || $_SESSION['login_type'] == 1 ): ?>
 					<div class="col-md-6">
 						<div class="form-group">
 						<label for="" class="control-label">Project Chair</label>
-						<select class="form-control form-control-sm select2" name="chair_id" id="chair_data" required>
+						<select class="form-control form-control-sm select2 update_chair" name="chair_id" id="chair_data" required>
 							<option></option>
 							<?php 
-							$chairs = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type between 2 and 3 order by concat(firstname,' ',lastname) asc ");
+							$chairs = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 3 order by concat(firstname,' ',lastname) asc ");
 							while($row= $chairs->fetch_assoc()):
 							?>
 							<option value="<?php echo $row['id'] ?>" <?php echo isset($chair_id) && $chair_id == $row['id'] ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
@@ -61,9 +60,9 @@
 					<div class="col-md-6">
 						<div class="form-group">
 						<label for="" class="control-label">Team Members</label>
-						<select id="team_members" class="form-control form-control-sm" multiple="multiple" name="user_ids[]" required>
+						<select id="team_members" class="form-control form-control-sm" multiple="multiple" multiselect-search="true" multiselect-select-all="true" multiselect-max-items="3" name="user_ids[]" required>
 						<?php 
-							$members = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type between 2 and 3 order by concat(firstname,' ',lastname) asc ");
+							$members = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 3 and selected_id = 0 order by concat(firstname,' ',lastname) asc ");
 							while($row= $members->fetch_assoc()):
 							?>
 							<option value="<?php echo $row['id'] ?>" <?php echo isset($user_ids) && $user_ids == $row['id'] ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
@@ -80,7 +79,7 @@
 						</div>
 					</div>
 				</div>
-				
+
         	</form>
     	</div>
     	<div class="card-footer border-top border-info">
@@ -92,9 +91,6 @@
 	</div>
 </div>
 <script>
-	// $document.ready(function() {
-	// 	// define variables
-	// })
 	$('#manage-project').submit(function(e){
 		e.preventDefault()
 		start_load()
@@ -116,7 +112,6 @@
 			}
 		})
 	});
-
+	
 	// linked Select box of Project Chair to Team Members
-
 </script>

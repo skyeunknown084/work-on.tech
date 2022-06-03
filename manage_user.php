@@ -39,6 +39,8 @@ $user = $conn->query("SELECT * FROM users where id =".$_GET['id']);
             </div>
 		</div>
 		<div class="form-group d-flex justify-content-center">
+			<?php if('pdf'){ ?>
+			<?php } ?>
 			<img src="<?php echo isset($meta['avatar']) ? 'assets/uploads/'.$meta['avatar'] :'' ?>" alt="" id="cimg" class="img-fluid img-thumbnail">
 		</div>
 

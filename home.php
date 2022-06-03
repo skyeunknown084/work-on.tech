@@ -16,9 +16,8 @@ if($_SESSION['login_type'] == 1){
 	$where_user = "WHERE p.manager_id = {$_SESSION['login_id']}";
 }
 
-
-
 if(isset($_GET['id'])){
+  
 	$qry = $conn->query("SELECT * FROM project_list where id = ".$_GET['id'])->fetch_array();
 	foreach($qry as $k => $v){
 		$proj[$k] = $v;
@@ -144,7 +143,7 @@ if($_SESSION['login_type'] == 3){
 											?>
                     </td>
                     <td>
-                      <a class="btn btn-primary btn-sm" href="./index.php?page=view_project&id=<?php echo $encoded_id ?>">
+                      <a class="btn btn-primary btn-sm" href="./index.php?page=view-project&id=<?php echo $encoded_id ?>">
                             <i class="fas fa-folder">
                             </i>
                             View
@@ -189,13 +188,13 @@ if($_SESSION['login_type'] == 3){
                             <?php echo $i++ ?>
                         </td>
                         <td>
-                            <a>
-                                <?php echo ucwords($row['name']) ?>
-                            </a>
-                            <br>
-                            <small>
-                                Due: <?php echo date("Y-m-d",strtotime($row['end_date'])) ?>
-                            </small>
+                          <a>
+                            <?php echo ucwords($row['name']) ?>
+                          </a>
+                          <br>
+                          <small>
+                              Due: <?php echo date("Y-m-d",strtotime($row['end_date'])) ?>
+                          </small>
                         </td>
                         <td class="hide">
                           <?php echo ucwords($row['name']) ?>
@@ -228,10 +227,10 @@ if($_SESSION['login_type'] == 3){
                           ?>
                         </td>
                         <td>
-                          <a class="btn btn-primary btn-sm" href="./index.php?page=view_project&id=<?php echo $encoded_id ?>">
-                                <i class="fas fa-folder">
-                                </i>
-                                View
+                          <a class="btn btn-primary btn-sm" href="./index.php?page=view-project&id=<?php echo $encoded_id ?>">
+                            <i class="fas fa-folder">
+                            </i>
+                            View
                           </a>
                         </td>
                       </tr>
@@ -283,7 +282,7 @@ if($_SESSION['login_type'] == 3){
                           ?>
                         </td>
                         <td>
-                          <a class="btn btn-primary btn-sm" href="./index.php?page=view_project&id=<?php echo $encoded_id ?>">
+                          <a class="btn btn-primary btn-sm" href="./index.php?page=view-project&id=<?php echo $encoded_id ?>">
                                 <i class="fas fa-folder">
                                 </i>
                                 View

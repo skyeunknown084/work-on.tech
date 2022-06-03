@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php session_start() ?>
+<?php 
+session_start();
+error_reporting(0);
+?>
 <?php 
 	if(!isset($_SESSION['login_id']))
 	    header('location:login.php');
     include 'db_connect.php';
     ob_start();
   if(!isset($_SESSION['system'])){
-
     $system = $conn->query("SELECT * FROM system_settings")->fetch_array();
     foreach($system as $k => $v){
       $_SESSION['system'][$k] = $v;
     }
   }
-  // if(!isset($_SESSION['notify'])){
+  if(!isset($_SESSION['chair'])){
 
-  //   $notify = $conn->query("SELECT * FROM task_list t INNER JOIN project_list p ON t.project_id = p.id")->fetch_array();
-  //   foreach($notify as $k => $v){
-  //     $_SESSION['notify'][$k] = $v;
-  //   }
-  // }
+    $notify = $conn->query("SELECT chair_id FROM project_list WHERE chair_id =".$_SESSION['login_id'])->fetch_array();
+    foreach($notify as $k => $v){
+      $_SESSION['chair'][$k] = $v;
+    }
+  }
+
   ob_end_flush();
 
 	include 'header.php' 

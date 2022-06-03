@@ -1,9 +1,14 @@
 <?php 
 include 'db_connect.php';
 if(isset($_GET['id'])){
-	$qry = $conn->query("SELECT * FROM user_productivity where id = ".$_GET['id'])->fetch_array();
-	foreach($qry as $k => $v){
-		$taskmeta[$k] = $v;
+	// Decrypt ID Param
+	$decrypt_1 = base64_decode($_GET['id']);
+	// Get ID on url
+	$up_id = ($decrypt_1 / 9234123120);
+
+	$qryviewprogress = $conn->query("SELECT * FROM user_productivity where id = ".$up_id)->fetch_array();
+	foreach($qryviewprogress as $k => $v){
+		$$k = $v;
 	}
 }
 ?>
@@ -33,24 +38,26 @@ if(isset($_GET['id'])){
 					<div class="form-group">
 						<label for="" class="control-label">Assigned To</label>
 						<?php 
-						$tasks = $conn->query("SELECT * FROM task_list where project_id = {$_GET['pid']} order by task asc ");
+						$tasks = $conn->query("SELECT concat(firstname,' ',lastname) as assignee,t.id as taskid FROM task_list t INNER JOIN users u ON t.task_owner = u.id where t.project_id = {$_GET['pid']} order by task asc ");
 						if($row= $tasks->fetch_assoc()):
 						?>
-						<div name="user_id" class="" id="task_progress_desc" <?php echo $row['id'] ?>>
-							<?php echo ucwords($row['task_owner']) ?>
+						<div name="user_id" class="" id="task_progress_desc" <?php echo $row['taskid'] ?>>
+							<?php echo ucwords($row['assignee']) ?>
 						</div>
 						<?php endif; ?>
 					</div>
 					<div class="form-group d-flex">						
 						<div class="">
 							<label for="viewFile" class="control-label p-0 col-12">Attached Task File</label>
-							<a id="viewFile" name="file_name" href="<?php echo isset($taskmeta['file_name']) ? 'assets/uploads/files/'.$taskmeta['file_name'] :'' ?>" target="_blank" rel="noopener noreferrer"><?php echo isset($taskmeta['file_name']) ? $taskmeta['file_name'] :'' ?></a>
+							<a id="viewFile" name="file_name" href="<?php echo isset($file_name) ? 'assets/uploads/files/'.$file_name :'' ?>" target="_blank" rel="noopener noreferrer"><?php echo isset($file_name) ? $file_name :'' ?></a>
 						</div>
 					</div>
 					<div class="form-group pb-4 mb-4">
 						<label for="">Progress Description</label>
 						<div name="description" class="" id="task_progress_desc">
-							<?php echo isset($taskmeta['description']) ? $taskmeta['description'] : 'desc' ?>
+							<textarea name="description" id="" cols="5" rows="5" class="summernote form-control">
+							<?php echo isset($description) ? $description : 'desc' ?>
+							</textarea>							
 						</div>
 					</div>
 				</div>
@@ -67,7 +74,6 @@ if(isset($_GET['id'])){
 							<p><?php echo isset($comment) ? $comment : '' ?></p>
 						</div>
 					</div>
-					
 				</div>
 			</div>
 		</div>

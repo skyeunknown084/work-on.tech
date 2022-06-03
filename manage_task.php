@@ -1,22 +1,31 @@
 <?php 
 include 'db_connect.php';
+session_start();
 if(isset($_GET['id'])){
 	// Decrypt ID Param
 	$decrypt_1 = base64_decode($_GET['id']);
 	// Get ID on url
 	$t_id = ($decrypt_1 / 9234123120);
 
-	$qry2 = $conn->query("SELECT * FROM task_list where id = ".$t_id)->fetch_array();
-	foreach($qry2 as $k => $v){
+	$managetaskqry = $conn->query("SELECT * FROM task_list where id = ".$t_id)->fetch_array();
+	foreach($managetaskqry as $k => $v){
 		$$k = $v;
 	}
+
+	$leader = $_SESSION['login_id'];
+	// convert to string and make it longer
+	// $encode_data = ($id*'9234123120');
+	// // encrypt data with base64 
+	// $encoded_id = base64_encode($encode_data);
 }
 ?>
 <div class="container-fluid">
 	<form action="" id="manage-task">
 		<input type="hidden" name="id" value="<?php echo isset($id) ? $id : '' ?>">
 		<input type="hidden" name="active" value="<?php echo isset($active) ? $active : '0' ?>">
+		<input type="hidden" name="notif_status" value="<?php echo isset($notif_status) ? $notif_status : '0' ?>">
 		<input type="hidden" name="project_id" value="<?php echo isset($_GET['pid']) ? $_GET['pid'] : '' ?>">
+		<input type="hidden" name="leader" value="<?php echo isset($_SESSION['login_id']) ? $_SESSION['login_id'] : '' ?>">
 		<div class="form-group">
 			<label for="">Task</label>
 			<input type="text" class="form-control form-control-sm" name="task" value="<?php echo isset($task) ? $task : '' ?>" required>
@@ -26,11 +35,12 @@ if(isset($_GET['id'])){
 			<select name="task_owner" id="task_owner" class="custom-select custom-select-sm" required>
 				<option>Select Assignee</option>
 				<?php 
-				$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 3 order by concat(firstname,' ',lastname) asc ");
+				$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as uname FROM users where type = 3 AND id != ".$_SESSION['login_id']);
 				while($row= $employees->fetch_assoc()):
-				?>
-				<option value="<?php echo $row['id'] ?>" <?php echo isset($task_owner) && in_array($row['id'],explode(',',$task_owner)) ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
-				<?php endwhile; ?>
+				?>				
+				<option value="<?php echo $row['id'] ?>" <?php echo isset($task_owner) && in_array($row['id'],explode(',',$task_owner)) ? "selected" : '' ?>><?php echo ucwords($row['uname']) ?></option>
+				<?php
+				endwhile; ?>
 			</select>
 			
 		</div>
